@@ -6,26 +6,28 @@ class Parking_Garage():
         
 
     def park(self):   #Takes ticket
-        if self.tickets == 0:
+        if len(self.tickets) == 0:
             print("\nYou have rented out every space!")
-        else:
-            self.tickets.pop(0)  #Decrease amount of available tickets
-            self.spaces.pop(0)   #Decrease amount of spaces   
-            current_ticket['owned'] += 1                                                                                                                                       
-            current_ticket['paid'] = False
+        else: #Decrease amount of tickets/spaces, add to owned tickets
+            self.tickets.pop(0) 
+            self.spaces.pop(0)  
+            current_ticket['owned'] += 1                                                                                                                       
+            current_ticket['paid'] = False #Since new tickets are held, you cant leave
             print(f"\nYou have taken {current_ticket['owned']} ticket(s), their are {len(self.tickets)} tickets left.")
 
-    def pay(self):     #Pay for parking                                                                      
+    def pay(self): #Pay for parking                                                                      
         if current_ticket['paid'] == True:
             print("\nYou have paid your ticket, you have the space for 15 minutes. ")
         elif current_ticket['paid'] == False:
+            print(f"\nYou have taken {current_ticket['owned']} ticket(s), their are {len(self.tickets)} tickets left.")
             pays = int(input("\nEnter how many tickets you would like to pay for: "))
-            current_ticket['owned'] -= pays
-            self.tickets.append(0)
-            self.spaces.append(0) 
-            if pays >= current_ticket['owned']:
+            for num in range(pays): #Loop that cycles through adding the amount of held tickets to lists, and taking away from owned tickets
+                self.tickets.append(current_ticket['owned']) 
+                self.spaces.append(current_ticket['owned'])
+                current_ticket['owned'] -= 1 
+            if pays >= current_ticket['owned']: #Must pay for the amount of tickets you hold
                 current_ticket['paid'] = True
-                print("Thank you, you have paid for all of your tickets and have 15 minutes to leave.")
+                print("Thank you, you have paid for all of your tickets and have 15 minutes to leave.") 
             else:
                 print(f"You have paid for {pays} ticket(s) and still have {current_ticket['owned']} ticket(s) to pay for!")                                                                                             
         elif current_ticket['paid'] == None:
@@ -34,7 +36,7 @@ class Parking_Garage():
     def leave(self):
         if current_ticket['paid'] == False:
             print(f"\nYou have {len(current_ticket)} ticket(s) to pay for!")
-            self.pay()
+            self.pay() #Prompts you to go back and pay for a ticket
         elif current_ticket['paid'] == True:
             print("\nGoodbye!")
         
@@ -51,7 +53,7 @@ def run():
         
 
 
-current_ticket = {'paid': None, 'owned': 0}                                #Need to add owned tickets and wether or not they have been paid for
+current_ticket = {'paid': None, 'owned': 0}                                
 
 my_tix = Parking_Garage()
 run()
